@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+import webbrowser
 
 st.set_page_config(initial_sidebar_state="collapsed")
 
@@ -31,6 +32,7 @@ def login():
         response = requests.post('http://localhost:5000/login', data={'username': username})
         if response.status_code == 200:
             st.success("Login bem-sucedido.")
+            webbrowser.open("http://localhost:8501/Home")
         else:
             st.error("Usuário não encontrado. Tente novamente.")
 
