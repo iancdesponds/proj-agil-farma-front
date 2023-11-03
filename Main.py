@@ -32,7 +32,7 @@ def login():
         response = requests.post('http://localhost:5000/login', data={'username': username})
         if response.status_code == 200:
             st.success("Login bem-sucedido.")
-            webbrowser.open("http://localhost:8501/Home")
+            webbrowser.open("http://localhost:8501/Menu")
         else:
             st.error("Usuário não encontrado. Tente novamente.")
 
