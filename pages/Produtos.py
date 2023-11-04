@@ -2,17 +2,19 @@ import streamlit as st
 import requests
 import pandas as pd
 from json import *
+from st_pages import Page, show_pages, add_page_title
+from streamlit_extras.switch_page_button import switch_page
 
-st.set_page_config(initial_sidebar_state="collapsed", page_title="Produtos", layout="wide")
-st.markdown(
-    """
-<style>
-    [data-testid="collapsedControl"] {
-        display: none
-    }
-</style>
-""",
-    unsafe_allow_html=True,
+st.set_page_config(initial_sidebar_state="collapsed", layout="wide", page_title="Produtos")
+
+
+show_pages(
+    [
+        Page("pages/Menu.py", "Home"),
+        Page("pages/Produtos.py", "Produtos"),
+        Page("pages/Estoque.py", "Estoque"),
+        Page("pages/Graficos.py", "Gráficos"),
+    ]
 )
 
 st.title("Produtos")
