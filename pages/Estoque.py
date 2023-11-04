@@ -1,16 +1,17 @@
 import streamlit as st
 import requests
+from st_pages import Page, show_pages, add_page_title
+from streamlit_extras.switch_page_button import switch_page
 
-st.set_page_config(initial_sidebar_state="collapsed")
-st.markdown(
-    """
-<style>
-    [data-testid="collapsedControl"] {
-        display: none
-    }
-</style>
-""",
-    unsafe_allow_html=True,
+st.set_page_config(initial_sidebar_state="collapsed", layout="wide", page_title="Estoque")
+
+show_pages(
+    [
+        Page("pages/Menu.py", "Home"),
+        Page("pages/Produtos.py", "Produtos"),
+        Page("pages/Estoque.py", "Estoque"),
+        Page("pages/Graficos.py", "Gráficos"),
+    ]
 )
 
 st.title("Estoque")
