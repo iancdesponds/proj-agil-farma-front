@@ -1,24 +1,50 @@
 import streamlit as st
 import requests
+from st_pages import Page, show_pages, add_page_title, hide_pages
+from streamlit_extras.switch_page_button import switch_page
+from time import sleep
 
-st.set_page_config(initial_sidebar_state="collapsed")
+st.set_page_config(initial_sidebar_state="collapsed", page_title="Menu")
 
-st.markdown(
-    """
-<style>
-    [data-testid="collapsedControl"] {
-        display: none
-    }
-</style>
-""",
-    unsafe_allow_html=True,
+show_pages(
+    [
+        Page("pages/Menu.py", "Home"),
+        Page("pages/Produtos.py", "Produtos"),
+        Page("pages/Estoque.py", "Estoque"),
+        Page("pages/Graficos.py", "Gráficos"),
+    ]
 )
+
+
 st.title("Menu - Home")
 
 st.header("Bem-vindo ao sistema de controle de estoque e produtos.")
 
 st.write("Qual página deseja acessar?")
 
-st.link_button("Produtos", "http://localhost:8501/Produtos")
-st.link_button("Estoque", "http://localhost:8501/Estoque")
-st.link_button("Gráficos", "http://localhost:8501/Graficos")
+produtos = st.button("Produtos")
+if produtos:
+    switch_page("Produtos")
+estoque = st.button("Estoque")
+if estoque:
+    switch_page("Estoque")
+graficos = st.button("Gráficos")
+if graficos:
+    switch_page("Gráficos")
+
+if st.sidebar.button("Logout"):
+    try:
+        st.sidebar.success("Logout bem-sucedido.")
+        sleep(1)
+        show_pages(
+            [
+                Page("pages/Menu.py", "Home"),
+                Page("pages/Produtos.py", "Produtos"),
+                Page("pages/Estoque.py", "Estoque"),
+                Page("pages/Graficos.py", "Gráficos"),
+                Page("Main.py", "Login"),
+            ]
+        )
+        switch_page("Login")
+    except KeyError:
+        st.sidebar.error("Erro no logout. Tente novamente.")
