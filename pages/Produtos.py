@@ -3,7 +3,7 @@ import requests
 import pandas as pd
 from json import *
 
-st.set_page_config(initial_sidebar_state="collapsed")
+st.set_page_config(initial_sidebar_state="collapsed", page_title="Produtos", layout="wide")
 st.markdown(
     """
 <style>
@@ -47,7 +47,8 @@ def listar_produtos():
     if st.button("Mostrar produtos cadastrados"):
         data = requests.get('http://localhost:5000/produtos').json()
         df = pd.DataFrame(data["Produtos"])
-        st.table(df)
+        df = df[['Marca', 'Nome', 'Descrição', 'Quantidade por Unidade', 'Notificação de Baixo Estoque']]
+        st.dataframe(df)
 
 def tabs():
     tab1, tab2, tab3, tab4 = st.tabs(["Novo Produto", "Editar Produto", "Deletar Produto", "Listar Produtos"])
