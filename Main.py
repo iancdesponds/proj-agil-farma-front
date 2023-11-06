@@ -33,7 +33,7 @@ def register():
     st.header("Cadastro de Usuário")
     username = st.text_input("Usuário ")
     if st.button("Cadastrar"):
-        response = requests.post('http://localhost:5000/register', data={'username': username})
+        response = requests.post('http://127.0.0.1:5000/register', json={'username': username})
         if response.status_code == 201:
             st.success("Cadastro realizado com sucesso.")
             sleep(1)
@@ -47,7 +47,7 @@ def login():
     st.header("Login")
     username = st.text_input("Usuário")
     if st.button("Login"):
-        response = requests.post('http://localhost:5000/login', data={'username': username})
+        response = requests.post('http://127.0.0.1:5000/login', json={'username': username})
         if response.status_code == 200:
             st.success("Login bem-sucedido.")
             sleep(1)
