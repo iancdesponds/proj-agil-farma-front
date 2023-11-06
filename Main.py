@@ -54,7 +54,6 @@ def login():
             switch_page("Menu")
             if 'username' not in st.session_state:
                 st.session_state['username'] = username
-                print(st.session_state['username'])
         else:
             st.error("Usuário não encontrado. Tente novamente.")
 

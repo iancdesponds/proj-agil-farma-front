@@ -4,7 +4,7 @@ from st_pages import Page, show_pages, add_page_title, hide_pages
 from streamlit_extras.switch_page_button import switch_page
 from time import sleep
 
-st.set_page_config(initial_sidebar_state="collapsed", page_title="Menu")
+st.set_page_config(initial_sidebar_state="collapsed", page_title="Home")
 
 show_pages(
     [

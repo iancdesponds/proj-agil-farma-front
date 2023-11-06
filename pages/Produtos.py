@@ -32,6 +32,7 @@ def novo_produto():
         response = requests.post('http://localhost:5000/produtos', data={'marca_produto': marca_produto, 'nome_produto': nome_produto, 'descricao_produto': descricao_produto, 'quantidade_por_unidade_produto': quantidade_por_unidade_produto, 'notificacao_baixo_estoque_produto': notificacao_baixo_estoque_produto})
         if response.status_code == 201:
             st.success("Cadastro realizado com sucesso.")
+            sleep(1)
         elif response.status_code == 400:
             st.error("Informações inválidas, preencha todos os campos corretamente.")
         else:
