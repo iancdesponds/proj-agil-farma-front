@@ -97,8 +97,11 @@ def listar_produtos():
     if st.button("Mostrar produtos cadastrados"):
         data = requests.get('http://127.0.0.1:5000/produtos').json()
         df = pd.DataFrame(data["Produtos"])
-        df = df[['Marca', 'Nome', 'Descrição', 'Quantidade por Unidade', 'Notificação de Baixo Estoque']]
-        st.dataframe(df)
+        if df.empty:
+            st.warning("Não há produtos cadastrados.")
+        else:
+            df = df[['Marca', 'Nome', 'Descrição', 'Quantidade por Unidade', 'Notificação de Baixo Estoque']]
+            st.dataframe(df)
 
 def tabs():
     tab1, tab2, tab3, tab4 = st.tabs(["Novo Produto", "Editar Produto", "Deletar Produto", "Listar Produtos"])
