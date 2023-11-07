@@ -1,3 +1,4 @@
 streamlit
 st_pages
 streamlit-extras
+plotly
