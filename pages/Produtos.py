@@ -29,7 +29,7 @@ def novo_produto():
     notificacao_baixo_estoque_produto = st.number_input("Notificação de baixo estoque", min_value=1,step=1, value=15)
     data = {'marca_produto': marca_produto, 'nome_produto': nome_produto, 'descricao_produto': descricao_produto, 'quantidade_por_unidade_produto': quantidade_por_unidade_produto, 'notificacao_baixo_estoque_produto': notificacao_baixo_estoque_produto}
     if st.button("Cadastrar produto"):
-        response = requests.post('http://127.0.0.1:5000/produtos', json={'marca_produto': marca_produto, 'nome_produto': nome_produto, 'descricao_produto': descricao_produto, 'quantidade_por_unidade_produto': quantidade_por_unidade_produto, 'notificacao_baixo_estoque_produto': notificacao_baixo_estoque_produto})
+        response = requests.post('http://proj-agil-farma-api-d002e0908a80.herokuapp.com//produtos', json={'marca_produto': marca_produto, 'nome_produto': nome_produto, 'descricao_produto': descricao_produto, 'quantidade_por_unidade_produto': quantidade_por_unidade_produto, 'notificacao_baixo_estoque_produto': notificacao_baixo_estoque_produto})
         if response.status_code == 201:
             st.success("Cadastro realizado com sucesso.")
             sleep(1)
@@ -42,7 +42,7 @@ def novo_produto():
 def editar_produto():
     st.header("Editar Produto")
 
-    data = requests.get('http://127.0.0.1:5000/produtos').json()
+    data = requests.get('http://proj-agil-farma-api-d002e0908a80.herokuapp.com//produtos').json()
     df = pd.DataFrame(data["Produtos"])
     if df.empty:
         st.warning("Não há produtos cadastrados.")
@@ -67,7 +67,7 @@ def editar_produto():
         except:
             notificacao_baixo_estoque_produto_update = st.number_input("Notificação de baixo estoque ", min_value=1,step=1, value=15)
         if st.button("Atualizar dados do produto"):
-            response = requests.put('http://127.0.0.1:5000/produtos', json={'nome_produto_update':produto, 'marca_produto_update': marca_produto_update, 'descricao_produto_update': descricao_produto_update, 'quantidade_por_unidade_produto_update': quantidade_por_unidade_produto_update, 'notificacao_baixo_estoque_produto_update': notificacao_baixo_estoque_produto_update})
+            response = requests.put('http://proj-agil-farma-api-d002e0908a80.herokuapp.com//produtos', json={'nome_produto_update':produto, 'marca_produto_update': marca_produto_update, 'descricao_produto_update': descricao_produto_update, 'quantidade_por_unidade_produto_update': quantidade_por_unidade_produto_update, 'notificacao_baixo_estoque_produto_update': notificacao_baixo_estoque_produto_update})
             if response.status_code == 200:
                 st.success("Atualização realizada com sucesso.")
                 sleep(1)
@@ -80,12 +80,12 @@ def editar_produto():
 
 def deletar_produto():
     st.header("Deletar Produto")
-    data = requests.get('http://127.0.0.1:5000/produtos').json()
+    data = requests.get('http://proj-agil-farma-api-d002e0908a80.herokuapp.com//produtos').json()
     df = pd.DataFrame(data["Produtos"])
     df = df[['Marca', 'Nome', 'Descrição', 'Quantidade por Unidade', 'Notificação de Baixo Estoque']]
     produto_para_deletar = st.selectbox("Produto  ", [produto for produto in df['Nome']], index=None, placeholder="Escolha uma opção")
     if st.button("Deletar produto"):
-        response = requests.delete(f'http://127.0.0.1:5000/produtos/{produto_para_deletar}')
+        response = requests.delete(f'http://proj-agil-farma-api-d002e0908a80.herokuapp.com//produtos/{produto_para_deletar}')
         if response.status_code == 200:
             st.success("Produto deletado com sucesso.")
             sleep(1)
@@ -98,7 +98,7 @@ def listar_produtos():
     st.header("Lista de Produtos")
 
     if st.button("Mostrar produtos cadastrados"):
-        data = requests.get('http://127.0.0.1:5000/produtos').json()
+        data = requests.get('http://proj-agil-farma-api-d002e0908a80.herokuapp.com//produtos').json()
         df = pd.DataFrame(data["Produtos"])
         if df.empty:
             st.warning("Não há produtos cadastrados.")

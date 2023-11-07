@@ -40,7 +40,7 @@ if st.sidebar.button("Logout"):
 
 def registrar_venda():
     st.header("Registrar Venda")
-    data = requests.get('http://127.0.0.1:5000/estoque').json()
+    data = requests.get('http://proj-agil-farma-api-d002e0908a80.herokuapp.com//estoque').json()
     df = pd.DataFrame(data["Estoque"])
     if df.empty:
         st.warning("Não há produtos cadastrados no estoque.")
@@ -84,10 +84,10 @@ def registrar_venda():
             
 
         if st.button("Registrar venda"):
-            response = requests.post('http://127.0.0.1:5000/vendas', json={'dados_produto': produto, 'fornecedor': fornecedor_venda, 'quantidade': quantidade_venda, 'data_de_validade': str(data_de_validade_venda), 'custo_por_unidade': custo_por_unidade_venda, 'preco_venda': preco_venda_venda, 'data_venda': str(pd.to_datetime('today').date())})
+            response = requests.post('http://proj-agil-farma-api-d002e0908a80.herokuapp.com//vendas', json={'dados_produto': produto, 'fornecedor': fornecedor_venda, 'quantidade': quantidade_venda, 'data_de_validade': str(data_de_validade_venda), 'custo_por_unidade': custo_por_unidade_venda, 'preco_venda': preco_venda_venda, 'data_venda': str(pd.to_datetime('today').date())})
             if response.status_code == 201:
                 quantidade_final = int(quantidade) - int(quantidade_venda)
-                response = requests.put('http://127.0.0.1:5000/estoque', json={'produto_update':produto, 'data_de_validade_update': str(data_de_validade_venda), 'fornecedor_update': fornecedor_venda, 'custo_por_unidade_update': custo_por_unidade_venda, 'preco_venda_update': preco_venda_venda, 'quantidade_update': quantidade_final, 'notificacao_baixo_estoque_update': int(notificacao_baixo_estoque_produto_venda)})
+                response = requests.put('http://proj-agil-farma-api-d002e0908a80.herokuapp.com//estoque', json={'produto_update':produto, 'data_de_validade_update': str(data_de_validade_venda), 'fornecedor_update': fornecedor_venda, 'custo_por_unidade_update': custo_por_unidade_venda, 'preco_venda_update': preco_venda_venda, 'quantidade_update': quantidade_final, 'notificacao_baixo_estoque_update': int(notificacao_baixo_estoque_produto_venda)})
                 if response.status_code == 200:
                     st.success("Venda registrada com sucesso.")
                     sleep(1)
@@ -101,7 +101,7 @@ def registrar_venda():
 def vendas_realizadas():
     st.header("Vendas Realizadas")
     if st.button("Mostrar vendas realizadas"):
-        data = requests.get('http://127.0.0.1:5000/vendas').json()
+        data = requests.get('http://proj-agil-farma-api-d002e0908a80.herokuapp.com//vendas').json()
         df = pd.DataFrame(data["Vendas"])
         if df.empty:
             st.warning("Não há vendas realizadas.")
@@ -114,7 +114,7 @@ def vendas_realizadas():
 
 def graficos():
     st.header("Gráficos")
-    data = requests.get('http://127.0.0.1:5000/vendas').json()
+    data = requests.get('http://proj-agil-farma-api-d002e0908a80.herokuapp.com//vendas').json()
     df = pd.DataFrame(data["Vendas"])
     if df.empty:
         st.warning("Não há vendas realizadas.")

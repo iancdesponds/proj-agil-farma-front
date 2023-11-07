@@ -34,7 +34,7 @@ def register():
     username = st.text_input("Usuário ")
     senha = st.text_input("Senha ", type="password")
     if st.button("Cadastrar"):
-        response = requests.post('http://127.0.0.1:5000/register', json={'username': username, 'senha': senha})
+        response = requests.post('http://proj-agil-farma-api-d002e0908a80.herokuapp.com//register', json={'username': username, 'senha': senha})
         if response.status_code == 201:
             st.success("Cadastro realizado com sucesso.")
             sleep(1)
@@ -49,7 +49,7 @@ def login():
     username = st.text_input("Usuário")
     senha = st.text_input("Senha", type="password")
     if st.button("Login"):
-        response = requests.post('http://127.0.0.1:5000/login', json={'username': username, 'senha': senha})
+        response = requests.post('http://proj-agil-farma-api-d002e0908a80.herokuapp.com//login', json={'username': username, 'senha': senha})
         if response.status_code == 200:
             st.success("Login bem-sucedido.")
             sleep(1)

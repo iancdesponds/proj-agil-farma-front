@@ -20,7 +20,7 @@ st.title("Estoque")
 
 def novo_produto():
     st.header("Novo Produto")
-    data = requests.get('http://127.0.0.1:5000/produtos').json()
+    data = requests.get('http://proj-agil-farma-api-d002e0908a80.herokuapp.com//produtos').json()
     df = pd.DataFrame(data["Produtos"])
     df = df[['Marca', 'Nome', 'Descrição', 'Quantidade por Unidade', 'Notificação de Baixo Estoque']]
     produto = st.selectbox("Produto", [produto for produto in df['Nome']], index=None, placeholder="Escolha uma opção")
@@ -36,7 +36,7 @@ def novo_produto():
             notificacao_baixo_estoque_produto = df.loc[df['Nome'] == produto]['Notificação de Baixo Estoque'].values[0]
         except:
             return st.error("Erro no cadastro. Tente novamente.")
-        response = requests.post('http://127.0.0.1:5000/estoque', json={'dados_produto': produto, 'data_de_validade': str(data_de_validade), 'fornecedor': fornecedor, 'custo_por_unidade': custo_por_unidade, 'preco_venda': preco_venda, 'quantidade': quantidade, 'notificacao_baixo_estoque': int(notificacao_baixo_estoque_produto)})
+        response = requests.post('http://proj-agil-farma-api-d002e0908a80.herokuapp.com//estoque', json={'dados_produto': produto, 'data_de_validade': str(data_de_validade), 'fornecedor': fornecedor, 'custo_por_unidade': custo_por_unidade, 'preco_venda': preco_venda, 'quantidade': quantidade, 'notificacao_baixo_estoque': int(notificacao_baixo_estoque_produto)})
         if response.status_code == 201:
             st.success("Cadastro realizado com sucesso.")
             sleep(1)
@@ -49,7 +49,7 @@ def novo_produto():
 
 def editar_produto():
     st.header("Editar Produto no Estoque")
-    data = requests.get('http://127.0.0.1:5000/estoque').json()
+    data = requests.get('http://proj-agil-farma-api-d002e0908a80.herokuapp.com//estoque').json()
     df = pd.DataFrame(data["Estoque"])
     if df.empty:
         st.warning("Não há produtos cadastrados no estoque.")
@@ -92,7 +92,7 @@ def editar_produto():
             notificacao_baixo_estoque_produto_update = st.number_input("Notificação de baixo estoque ", min_value=1,step=1, value=15, placeholder="Notificação de baixo estoque")
 
         if st.button("Atualizar dados do produto"):
-            response = requests.put('http://127.0.0.1:5000/estoque', json={'produto_update':produto, 'data_de_validade_update': str(data_de_validade_update), 'fornecedor_update': fornecedor_update, 'custo_por_unidade_update': custo_por_unidade_update, 'preco_venda_update': preco_venda_update, 'quantidade_update': quantidade_update, 'notificacao_baixo_estoque_update': int(notificacao_baixo_estoque_produto_update)})
+            response = requests.put('http://proj-agil-farma-api-d002e0908a80.herokuapp.com//estoque', json={'produto_update':produto, 'data_de_validade_update': str(data_de_validade_update), 'fornecedor_update': fornecedor_update, 'custo_por_unidade_update': custo_por_unidade_update, 'preco_venda_update': preco_venda_update, 'quantidade_update': quantidade_update, 'notificacao_baixo_estoque_update': int(notificacao_baixo_estoque_produto_update)})
             if response.status_code == 200:
                 st.success("Atualização realizada com sucesso.")
                 sleep(1)
@@ -105,7 +105,7 @@ def editar_produto():
 def deletar_produto():
     st.header("Deletar Produto")
 
-    data = requests.get('http://127.0.0.1:5000/estoque').json()
+    data = requests.get('http://proj-agil-farma-api-d002e0908a80.herokuapp.com//estoque').json()
     df = pd.DataFrame(data["Estoque"])
     if df.empty:
         st.warning("Não há produtos cadastrados no estoque.")
@@ -122,7 +122,7 @@ def deletar_produto():
             pass
     
         if st.button("Deletar produto"):
-            response = requests.delete(f'http://127.0.0.1:5000/estoque/{produto}')
+            response = requests.delete(f'http://proj-agil-farma-api-d002e0908a80.herokuapp.com//estoque/{produto}')
             if response.status_code == 200:
                 st.success("Produto deletado com sucesso.")
                 sleep(1)
@@ -133,7 +133,7 @@ def deletar_produto():
 def listar_produtos():
     st.header("Lista de Estoque")
     if st.button("Mostrar lista de estoque"):
-        data = requests.get('http://127.0.0.1:5000/estoque').json()
+        data = requests.get('http://proj-agil-farma-api-d002e0908a80.herokuapp.com//estoque').json()
         df = pd.DataFrame(data["Estoque"])
         if df.empty:
             st.warning("Não há produtos cadastrados no estoque.")
@@ -150,7 +150,7 @@ def produtos_em_baixo_estoque():
     st.write("A notificação de baixo estoque é definida pelo usuário na página de produtos.")
 
     if st.button("Mostrar lista de produtos com baixo estoque"):
-        data = requests.get('http://127.0.0.1:5000/estoque').json()
+        data = requests.get('http://proj-agil-farma-api-d002e0908a80.herokuapp.com//estoque').json()
         df = pd.DataFrame(data["Estoque"])
         if df.empty:
             st.warning("Não há produtos cadastrados no estoque.")
@@ -166,7 +166,7 @@ def produtos_proximos_vencimento():
     st.header("Produtos Próximos ao Vencimento")
     st.write("Aqui são mostrados os produtos que estão a 15 dias ou menos do vencimento.")
     if st.button("Mostrar lista de produtos próximos ao vencimento"):
-        data = requests.get('http://127.0.0.1:5000/estoque').json()
+        data = requests.get('http://proj-agil-farma-api-d002e0908a80.herokuapp.com//estoque').json()
         df = pd.DataFrame(data["Estoque"])
         if df.empty:
             st.warning("Não há produtos cadastrados no estoque.")
