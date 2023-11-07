@@ -97,6 +97,17 @@ def registrar_venda():
 
 def vendas_realizadas():
     st.header("Vendas Realizadas")
+    if st.button("Mostrar vendas realizadas"):
+        data = requests.get('http://127.0.0.1:5000/vendas').json()
+        df = pd.DataFrame(data["Vendas"])
+        if df.empty:
+            st.warning("Não há vendas realizadas.")
+        else:
+            df = df[["Produto", "Quantidade", "Data de Validade", "Fornecedor", "Custo por Unidade", "Preço de Venda", "Data da Venda"]]
+            df["Valor Total"] = df["Quantidade"] * df["Preço de Venda"]
+            df["Custo total"] = df["Quantidade"] * df["Custo por Unidade"]
+            df["Lucro"] = df["Valor Total"] - df["Quantidade"] * df["Custo por Unidade"]
+            st.dataframe(df)
 
 def graficos():
     st.header("Gráficos")
