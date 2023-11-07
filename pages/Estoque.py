@@ -66,7 +66,8 @@ def editar_produto():
             pass
 
         try:
-            data_de_validade_update = st.date_input("Data de validade", format="DD/MM/YYYY", value=df.loc[df['Produto'] == produto]['Data de Validade'].values[0])
+            validade_produto = df.loc[df['Produto'] == produto]['Data de Validade'].values[0]
+            data_de_validade_update = st.date_input("Data de validade", format="DD/MM/YYYY", value=pd.to_datetime(validade_produto))
         except:
             data_de_validade_update = st.date_input("Data de validade ", format="DD/MM/YYYY")
         try:
@@ -138,11 +139,16 @@ def listar_produtos():
             st.warning("Não há produtos cadastrados no estoque.")
         else:
             df = df[["Produto", "Quantidade", "Data de Validade", "Fornecedor", "Custo por Unidade", "Preço de Venda", "Notificação de Baixo Estoque"]]
+            df["Data de Validade"] = pd.to_datetime(df["Data de Validade"])
+            df["Dias para o Vencimento"] = df["Data de Validade"] - pd.to_datetime('today')
+            df["Dias para o Vencimento"] = df["Dias para o Vencimento"].dt.days
             st.dataframe(df)
 
 
 def produtos_em_baixo_estoque():
     st.header("Produtos em Baixo Estoque")
+    st.write("A notificação de baixo estoque é definida pelo usuário na página de produtos.")
+
     if st.button("Mostrar lista de produtos com baixo estoque"):
         data = requests.get('http://127.0.0.1:5000/estoque').json()
         df = pd.DataFrame(data["Estoque"])
@@ -151,10 +157,14 @@ def produtos_em_baixo_estoque():
         else:
             df = df[["Produto", "Quantidade", "Data de Validade", "Fornecedor", "Custo por Unidade", "Preço de Venda", "Notificação de Baixo Estoque"]]
             df = df.loc[df['Quantidade'] <= df['Notificação de Baixo Estoque']]
+            df["Data de Validade"] = pd.to_datetime(df["Data de Validade"])
+            df["Dias para o Vencimento"] = df["Data de Validade"] - pd.to_datetime('today')
+            df["Dias para o Vencimento"] = df["Dias para o Vencimento"].dt.days
             st.dataframe(df)
 
 def produtos_proximos_vencimento():
     st.header("Produtos Próximos ao Vencimento")
+    st.write("Aqui são mostrados os produtos que estão a 15 dias ou menos do vencimento.")
     if st.button("Mostrar lista de produtos próximos ao vencimento"):
         data = requests.get('http://127.0.0.1:5000/estoque').json()
         df = pd.DataFrame(data["Estoque"])
@@ -163,6 +173,8 @@ def produtos_proximos_vencimento():
         else:
             df = df[["Produto", "Quantidade", "Data de Validade", "Fornecedor", "Custo por Unidade", "Preço de Venda", "Notificação de Baixo Estoque"]]
             df["Data de Validade"] = pd.to_datetime(df["Data de Validade"])
+            df["Dias para o Vencimento"] = df["Data de Validade"] - pd.to_datetime('today')
+            df["Dias para o Vencimento"] = df["Dias para o Vencimento"].dt.days
             df = df.loc[df['Data de Validade'] <= pd.to_datetime('today') + pd.to_timedelta('15D')]
             st.dataframe(df)
 
