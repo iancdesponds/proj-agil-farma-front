@@ -32,7 +32,11 @@ def novo_produto():
     quantidade = st.number_input("Quantidade", min_value=1,step=1, value=1, placeholder="Quantidade")
 
     if st.button("Cadastrar produto no estoque"):
-        response = requests.post('http://127.0.0.1:5000/estoque', json={'dados_produto': produto, 'data_de_validade': str(data_de_validade), 'fornecedor': fornecedor, 'custo_por_unidade': custo_por_unidade, 'preco_venda': preco_venda, 'quantidade': quantidade})
+        try:
+            notificacao_baixo_estoque_produto = df.loc[df['Nome'] == produto]['Notificação de Baixo Estoque'].values[0]
+        except:
+            return st.error("Erro no cadastro. Tente novamente.")
+        response = requests.post('http://127.0.0.1:5000/estoque', json={'dados_produto': produto, 'data_de_validade': str(data_de_validade), 'fornecedor': fornecedor, 'custo_por_unidade': custo_por_unidade, 'preco_venda': preco_venda, 'quantidade': quantidade, 'notificacao_baixo_estoque': int(notificacao_baixo_estoque_produto)})
         if response.status_code == 201:
             st.success("Cadastro realizado com sucesso.")
             sleep(1)
@@ -81,6 +85,10 @@ def editar_produto():
             quantidade_update = st.number_input("Quantidade", min_value=1,step=1, value=df.loc[df['Produto'] == produto]['Quantidade'].values[0], placeholder="Quantidade")
         except:
             quantidade_update = st.number_input("Quantidade ", min_value=1,step=1, value=1, placeholder="Quantidade")
+        try:
+            notificacao_baixo_estoque_produto_update = st.number_input("Notificação de baixo estoque", min_value=1,step=1, value=df.loc[df['Produto'] == produto]['Notificação de Baixo Estoque'].values[0], placeholder="Notificação de baixo estoque")
+        except:
+            notificacao_baixo_estoque_produto_update = st.number_input("Notificação de baixo estoque ", min_value=1,step=1, value=15, placeholder="Notificação de baixo estoque")
 
         if st.button("Atualizar dados do produto"):
             response = requests.put('http://127.0.0.1:5000/estoque', json={'produto_update':produto, 'data_de_validade_update': str(data_de_validade_update), 'fornecedor_update': fornecedor_update, 'custo_por_unidade_update': custo_por_unidade_update, 'preco_venda_update': preco_venda_update, 'quantidade_update': quantidade_update})
@@ -129,12 +137,21 @@ def listar_produtos():
         if df.empty:
             st.warning("Não há produtos cadastrados no estoque.")
         else:
-            df = df[["Produto", "Quantidade", "Data de Validade", "Fornecedor", "Custo por Unidade", "Preço de Venda"]]
+            df = df[["Produto", "Quantidade", "Data de Validade", "Fornecedor", "Custo por Unidade", "Preço de Venda", "Notificação de Baixo Estoque"]]
             st.dataframe(df)
 
 
 def produtos_em_baixo_estoque():
     st.header("Produtos em Baixo Estoque")
+    if st.button("Mostrar lista de produtos com baixo estoque"):
+        data = requests.get('http://127.0.0.1:5000/estoque').json()
+        df = pd.DataFrame(data["Estoque"])
+        if df.empty:
+            st.warning("Não há produtos cadastrados no estoque.")
+        else:
+            df = df[["Produto", "Quantidade", "Data de Validade", "Fornecedor", "Custo por Unidade", "Preço de Venda", "Notificação de Baixo Estoque"]]
+            df = df.loc[df['Quantidade'] <= df['Notificação de Baixo Estoque']]
+            st.dataframe(df)
 
 def tabs():
     tab1, tab2, tab3, tab4, tab5 = st.tabs(["Novo Produto no Estoque", "Editar Produto no Estoque", "Deletar Produto do Estoque", "Listar Produtos em Estoque", "Produtos em Baixo Estoque"])
