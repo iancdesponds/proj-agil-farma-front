@@ -26,7 +26,7 @@ def novo_produto():
     marca_produto = st.text_input("Marca/Laboratório")
     descricao_produto = st.text_input("Descrição do produto")
     quantidade_por_unidade_produto = st.text_input("Quantidade por unidade")
-    notificacao_baixo_estoque_produto = st.number_input("Notificação de baixo estoque - Dias", min_value=1,step=1, value=15, placeholder="Dias")
+    notificacao_baixo_estoque_produto = st.number_input("Notificação de baixo estoque", min_value=1,step=1, value=15)
     data = {'marca_produto': marca_produto, 'nome_produto': nome_produto, 'descricao_produto': descricao_produto, 'quantidade_por_unidade_produto': quantidade_por_unidade_produto, 'notificacao_baixo_estoque_produto': notificacao_baixo_estoque_produto}
     if st.button("Cadastrar produto"):
         response = requests.post('http://127.0.0.1:5000/produtos', json={'marca_produto': marca_produto, 'nome_produto': nome_produto, 'descricao_produto': descricao_produto, 'quantidade_por_unidade_produto': quantidade_por_unidade_produto, 'notificacao_baixo_estoque_produto': notificacao_baixo_estoque_produto})
@@ -44,35 +44,38 @@ def editar_produto():
 
     data = requests.get('http://127.0.0.1:5000/produtos').json()
     df = pd.DataFrame(data["Produtos"])
-    df = df[['Marca', 'Nome', 'Descrição', 'Quantidade por Unidade', 'Notificação de Baixo Estoque']]
-    produto = st.selectbox("Produto", [produto for produto in df['Nome']], index=None, placeholder="Escolha uma opção")
+    if df.empty:
+        st.warning("Não há produtos cadastrados.")
+    else:
+        df = df[['Marca', 'Nome', 'Descrição', 'Quantidade por Unidade', 'Notificação de Baixo Estoque']]
+        produto = st.selectbox("Produto", [produto for produto in df['Nome']], index=None, placeholder="Escolha uma opção")
 
-    try:
-        marca_produto_update = st.text_input("Marca/Laboratório ", value=df.loc[df['Nome'] == produto]['Marca'].values[0])
-    except:
-        marca_produto_update = st.text_input("Marca/Laboratório ")
-    try:
-        descricao_produto_update = st.text_input("Descrição do produto ", value=df.loc[df['Nome'] == produto]['Descrição'].values[0])
-    except:
-        descricao_produto_update = st.text_input("Descrição do produto ")
-    try:
-        quantidade_por_unidade_produto_update = st.text_input("Quantidade por unidade ", value=df.loc[df['Nome'] == produto]['Quantidade por Unidade'].values[0])
-    except:
-        quantidade_por_unidade_produto_update = st.text_input("Quantidade por unidade ")
-    try:
-        notificacao_baixo_estoque_produto_update = st.number_input("Notificação de baixo estoque - Dias ", min_value=1,step=1, placeholder="Dias", value=df.loc[df['Nome'] == produto]['Notificação de Baixo Estoque'].values[0])
-    except:
-        notificacao_baixo_estoque_produto_update = st.number_input("Notificação de baixo estoque - Dias ", min_value=1,step=1, placeholder="Dias", value=15)
-    if st.button("Atualizar dados do produto"):
-        response = requests.put('http://127.0.0.1:5000/produtos', json={'nome_produto_update':produto, 'marca_produto_update': marca_produto_update, 'descricao_produto_update': descricao_produto_update, 'quantidade_por_unidade_produto_update': quantidade_por_unidade_produto_update, 'notificacao_baixo_estoque_produto_update': notificacao_baixo_estoque_produto_update})
-        if response.status_code == 200:
-            st.success("Atualização realizada com sucesso.")
-            sleep(1)
-            switch_page("Produtos")
-        elif response.status_code == 400:
-            st.error("Informações inválidas, preencha todos os campos corretamente.")
-        else:
-            st.error("Erro na atualização. Tente novamente.")
+        try:
+            marca_produto_update = st.text_input("Marca/Laboratório ", value=df.loc[df['Nome'] == produto]['Marca'].values[0])
+        except:
+            marca_produto_update = st.text_input("Marca/Laboratório ")
+        try:
+            descricao_produto_update = st.text_input("Descrição do produto ", value=df.loc[df['Nome'] == produto]['Descrição'].values[0])
+        except:
+            descricao_produto_update = st.text_input("Descrição do produto ")
+        try:
+            quantidade_por_unidade_produto_update = st.text_input("Quantidade por unidade ", value=df.loc[df['Nome'] == produto]['Quantidade por Unidade'].values[0])
+        except:
+            quantidade_por_unidade_produto_update = st.text_input("Quantidade por unidade ")
+        try:
+            notificacao_baixo_estoque_produto_update = st.number_input("Notificação de baixo estoque ", min_value=1,step=1, value=df.loc[df['Nome'] == produto]['Notificação de Baixo Estoque'].values[0])
+        except:
+            notificacao_baixo_estoque_produto_update = st.number_input("Notificação de baixo estoque ", min_value=1,step=1, value=15)
+        if st.button("Atualizar dados do produto"):
+            response = requests.put('http://127.0.0.1:5000/produtos', json={'nome_produto_update':produto, 'marca_produto_update': marca_produto_update, 'descricao_produto_update': descricao_produto_update, 'quantidade_por_unidade_produto_update': quantidade_por_unidade_produto_update, 'notificacao_baixo_estoque_produto_update': notificacao_baixo_estoque_produto_update})
+            if response.status_code == 200:
+                st.success("Atualização realizada com sucesso.")
+                sleep(1)
+                switch_page("Produtos")
+            elif response.status_code == 400:
+                st.error("Informações inválidas, preencha todos os campos corretamente.")
+            else:
+                st.error("Erro na atualização. Tente novamente.")
 
 
 def deletar_produto():
