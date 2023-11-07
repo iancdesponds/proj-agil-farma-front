@@ -11,7 +11,7 @@ show_pages(
         Page("pages/Menu.py", "Home"),
         Page("pages/Produtos.py", "Produtos"),
         Page("pages/Estoque.py", "Estoque"),
-        Page("pages/Graficos.py", "Gráficos"),
+        Page("pages/Vendas.py", "Vendas"),
     ]
 )
 
@@ -28,9 +28,9 @@ if produtos:
 estoque = st.button("Estoque")
 if estoque:
     switch_page("Estoque")
-graficos = st.button("Gráficos")
+graficos = st.button("Vendas")
 if graficos:
-    switch_page("Gráficos")
+    switch_page("Vendas")
 
 if st.sidebar.button("Logout"):
     try:
@@ -41,7 +41,7 @@ if st.sidebar.button("Logout"):
                 Page("pages/Menu.py", "Home"),
                 Page("pages/Produtos.py", "Produtos"),
                 Page("pages/Estoque.py", "Estoque"),
-                Page("pages/Graficos.py", "Gráficos"),
+                Page("pages/Vendas.py", "Vendas"),
                 Page("Main.py", "Login"),
             ]
         )

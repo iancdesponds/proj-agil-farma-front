@@ -12,7 +12,7 @@ show_pages(
         Page("pages/Menu.py", "Home"),
         Page("pages/Produtos.py", "Produtos"),
         Page("pages/Estoque.py", "Estoque"),
-        Page("pages/Graficos.py", "Gráficos"),
+        Page("pages/Vendas.py", "Vendas"),
     ]
 )
 
@@ -91,7 +91,7 @@ def editar_produto():
             notificacao_baixo_estoque_produto_update = st.number_input("Notificação de baixo estoque ", min_value=1,step=1, value=15, placeholder="Notificação de baixo estoque")
 
         if st.button("Atualizar dados do produto"):
-            response = requests.put('http://127.0.0.1:5000/estoque', json={'produto_update':produto, 'data_de_validade_update': str(data_de_validade_update), 'fornecedor_update': fornecedor_update, 'custo_por_unidade_update': custo_por_unidade_update, 'preco_venda_update': preco_venda_update, 'quantidade_update': quantidade_update})
+            response = requests.put('http://127.0.0.1:5000/estoque', json={'produto_update':produto, 'data_de_validade_update': str(data_de_validade_update), 'fornecedor_update': fornecedor_update, 'custo_por_unidade_update': custo_por_unidade_update, 'preco_venda_update': preco_venda_update, 'quantidade_update': quantidade_update, 'notificacao_baixo_estoque_update': int(notificacao_baixo_estoque_produto_update)})
             if response.status_code == 200:
                 st.success("Atualização realizada com sucesso.")
                 sleep(1)
@@ -175,7 +175,7 @@ if st.sidebar.button("Logout"):
                 Page("pages/Menu.py", "Home"),
                 Page("pages/Produtos.py", "Produtos"),
                 Page("pages/Estoque.py", "Estoque"),
-                Page("pages/Graficos.py", "Gráficos"),
+                Page("pages/Vendas.py", "Vendas"),
                 Page("Main.py", "Login"),
             ]
         )
