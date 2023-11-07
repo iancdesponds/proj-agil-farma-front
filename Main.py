@@ -62,7 +62,7 @@ def login():
 def login_register():
     st.title("Home")
 
-    st.header("Bem-vindo ao sistema de controle de estoque e produtos.")
+    st.header("Bem-vindo ao sistema de controle de estoque e produtos SysFarma.")
 
     st.write("Para começar, faça o login ou cadastre-se.")
 
