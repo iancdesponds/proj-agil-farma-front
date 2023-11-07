@@ -57,29 +57,29 @@ def registrar_venda():
             pass
 
         try:
-            data_de_validade_venda = st.date_input("Data de validade   ", format="DD/MM/YYYY", value=df.loc[df['Produto'] == produto]['Data de Validade'].values[0])
+            data_de_validade_venda = st.date_input("Data de validade   ", format="DD/MM/YYYY", value=df.loc[df['Produto'] == produto]['Data de Validade'].values[0], disabled=True)
         except:
-            data_de_validade_venda = st.date_input("Data de validade    ", format="DD/MM/YYYY")
+            data_de_validade_venda = st.date_input("Data de validade    ", format="DD/MM/YYYY", disabled=True)
         try:
-            fornecedor_venda = st.text_input("Fornecedor   ", value=df.loc[df['Produto'] == produto]['Fornecedor'].values[0])
+            fornecedor_venda = st.text_input("Fornecedor   ", value=df.loc[df['Produto'] == produto]['Fornecedor'].values[0], disabled=True)
         except:
-            fornecedor_venda = st.text_input("Fornecedor     ")
+            fornecedor_venda = st.text_input("Fornecedor     ", disabled=True)
         try:
-            custo_por_unidade_venda = st.number_input("Custo por unidade   ", min_value=0.00,step=0.01, value=df.loc[df['Produto'] == produto]['Custo por Unidade'].values[0], placeholder="Custo por unidade")
+            custo_por_unidade_venda = st.number_input("Custo por unidade   ", min_value=0.00,step=0.01, value=df.loc[df['Produto'] == produto]['Custo por Unidade'].values[0], placeholder="Custo por unidade", disabled=True)
         except:
-            custo_por_unidade_venda = st.number_input("Custo por unidade    ", min_value=0.00,step=0.01, value=0.00, placeholder="Custo por unidade")
+            custo_por_unidade_venda = st.number_input("Custo por unidade    ", min_value=0.00,step=0.01, value=0.00, placeholder="Custo por unidade", disabled=True)
         try:
             preco_venda_venda = st.number_input("Preço de venda   ", min_value=0.00,step=0.01, value=df.loc[df['Produto'] == produto]['Preço de Venda'].values[0], placeholder="Preço de venda")
         except:
             preco_venda_venda = st.number_input("Preço de venda    ", min_value=0.00,step=0.01, value=0.00, placeholder="Preço de venda")
         try:
-            notificacao_baixo_estoque_produto_venda = st.number_input("Notificação de baixo estoque   ", min_value=1,step=1, value=df.loc[df['Produto'] == produto]['Notificação de Baixo Estoque'].values[0], placeholder="Notificação de baixo estoque")
+            notificacao_baixo_estoque_produto_venda = st.number_input("Notificação de baixo estoque   ", min_value=1,step=1, value=df.loc[df['Produto'] == produto]['Notificação de Baixo Estoque'].values[0], placeholder="Notificação de baixo estoque", disabled=True)
         except:
-            notificacao_baixo_estoque_produto_venda = st.number_input("Notificação de baixo estoque    ", min_value=1,step=1, value=15, placeholder="Notificação de baixo estoque")
+            notificacao_baixo_estoque_produto_venda = st.number_input("Notificação de baixo estoque    ", min_value=1,step=1, value=15, placeholder="Notificação de baixo estoque", disabled=True)
         try:
-            quantidade = st.number_input("Quantidade   ", min_value=1,step=1, value=df.loc[df['Produto'] == produto]['Quantidade'].values[0], placeholder="Quantidade")
+            quantidade = st.number_input("Quantidade   ", min_value=1,step=1, value=df.loc[df['Produto'] == produto]['Quantidade'].values[0], placeholder="Quantidade", disabled=True)
         except:
-            quantidade = st.number_input("Quantidade    ", min_value=1,step=1, value=1, placeholder="Quantidade")
+            quantidade = st.number_input("Quantidade    ", min_value=1,step=1, value=1, placeholder="Quantidade", disabled=True)
         quantidade_venda = st.number_input("Quantidade Vendida", min_value=1,step=1, value=1, placeholder="Quantidade")
             
 
