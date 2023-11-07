@@ -153,8 +153,21 @@ def produtos_em_baixo_estoque():
             df = df.loc[df['Quantidade'] <= df['Notificação de Baixo Estoque']]
             st.dataframe(df)
 
+def produtos_proximos_vencimento():
+    st.header("Produtos Próximos ao Vencimento")
+    if st.button("Mostrar lista de produtos próximos ao vencimento"):
+        data = requests.get('http://127.0.0.1:5000/estoque').json()
+        df = pd.DataFrame(data["Estoque"])
+        if df.empty:
+            st.warning("Não há produtos cadastrados no estoque.")
+        else:
+            df = df[["Produto", "Quantidade", "Data de Validade", "Fornecedor", "Custo por Unidade", "Preço de Venda", "Notificação de Baixo Estoque"]]
+            df["Data de Validade"] = pd.to_datetime(df["Data de Validade"])
+            df = df.loc[df['Data de Validade'] <= pd.to_datetime('today') + pd.to_timedelta('15D')]
+            st.dataframe(df)
+
 def tabs():
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(["Novo Produto no Estoque", "Editar Produto no Estoque", "Deletar Produto do Estoque", "Listar Produtos em Estoque", "Produtos em Baixo Estoque"])
+    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["Novo Produto no Estoque", "Editar Produto no Estoque", "Deletar Produto do Estoque", "Listar Produtos em Estoque", "Produtos em Baixo Estoque", "Produtos Próximos ao Vencimento"])
     with tab1:
         novo_produto()
     with tab2:
@@ -165,6 +178,8 @@ def tabs():
         listar_produtos()
     with tab5:
         produtos_em_baixo_estoque()
+    with tab6:
+        produtos_proximos_vencimento()
 
 if st.sidebar.button("Logout"):
     try:
