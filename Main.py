@@ -32,8 +32,9 @@ show_pages(
 def register():
     st.header("Cadastro de Usuário")
     username = st.text_input("Usuário ")
+    senha = st.text_input("Senha ", type="password")
     if st.button("Cadastrar"):
-        response = requests.post('http://127.0.0.1:5000/register', json={'username': username})
+        response = requests.post('http://127.0.0.1:5000/register', json={'username': username, 'senha': senha})
         if response.status_code == 201:
             st.success("Cadastro realizado com sucesso.")
             sleep(1)
@@ -46,8 +47,9 @@ def register():
 def login():
     st.header("Login")
     username = st.text_input("Usuário")
+    senha = st.text_input("Senha", type="password")
     if st.button("Login"):
-        response = requests.post('http://127.0.0.1:5000/login', json={'username': username})
+        response = requests.post('http://127.0.0.1:5000/login', json={'username': username, 'senha': senha})
         if response.status_code == 200:
             st.success("Login bem-sucedido.")
             sleep(1)
