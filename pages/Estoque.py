@@ -44,11 +44,83 @@ def novo_produto():
 
 
 def editar_produto():
-    st.header("Editar Produto")
+    st.header("Editar Produto no Estoque")
+    data = requests.get('http://127.0.0.1:5000/estoque').json()
+    df = pd.DataFrame(data["Estoque"])
+    if df.empty:
+        st.warning("Não há produtos cadastrados no estoque.")
+    else:
+        df = df[["Produto", "Quantidade", "Data de Validade", "Fornecedor", "Custo por Unidade", "Preço de Venda"]]
+        produtos = []
+        for i in range(len(df)):
+            produtos.append(df["Produto"][i] + " /// " + df['Data de Validade'][i])
+        produto = st.selectbox("Produto + Data de Validade", produtos, index=None, placeholder="Escolha uma opção")
+        try:
+            index_produto = produtos.index(produto)
+            produto = df["Produto"][index_produto]
+        except:
+            pass
+
+        try:
+            data_de_validade_update = st.date_input("Data de validade", format="DD/MM/YYYY", value=df.loc[df['Produto'] == produto]['Data de Validade'].values[0])
+        except:
+            data_de_validade_update = st.date_input("Data de validade ", format="DD/MM/YYYY")
+        try:
+            fornecedor_update = st.text_input("Fornecedor", value=df.loc[df['Produto'] == produto]['Fornecedor'].values[0])
+        except:
+            fornecedor_update = st.text_input("Fornecedor ")
+        try:
+            custo_por_unidade_update = st.number_input("Custo por unidade", min_value=0.00,step=0.01, value=df.loc[df['Produto'] == produto]['Custo por Unidade'].values[0], placeholder="Custo por unidade")
+        except:
+            custo_por_unidade_update = st.number_input("Custo por unidade ", min_value=0.00,step=0.01, value=0.00, placeholder="Custo por unidade")
+        try:
+            preco_venda_update = st.number_input("Preço de venda", min_value=0.00,step=0.01, value=df.loc[df['Produto'] == produto]['Preço de Venda'].values[0], placeholder="Preço de venda")
+        except:
+            preco_venda_update = st.number_input("Preço de venda ", min_value=0.00,step=0.01, value=0.00, placeholder="Preço de venda")
+        try:
+            quantidade_update = st.number_input("Quantidade", min_value=1,step=1, value=df.loc[df['Produto'] == produto]['Quantidade'].values[0], placeholder="Quantidade")
+        except:
+            quantidade_update = st.number_input("Quantidade ", min_value=1,step=1, value=1, placeholder="Quantidade")
+
+        if st.button("Atualizar dados do produto"):
+            response = requests.put('http://127.0.0.1:5000/estoque', json={'produto_update':produto, 'data_de_validade_update': str(data_de_validade_update), 'fornecedor_update': fornecedor_update, 'custo_por_unidade_update': custo_por_unidade_update, 'preco_venda_update': preco_venda_update, 'quantidade_update': quantidade_update})
+            if response.status_code == 200:
+                st.success("Atualização realizada com sucesso.")
+                sleep(1)
+                switch_page("Estoque")
+            elif response.status_code == 400:
+                st.error("Informações inválidas, preencha todos os campos corretamente.")
+            else:
+                st.error("Erro na atualização. Tente novamente.")
 
 def deletar_produto():
     st.header("Deletar Produto")
 
+    data = requests.get('http://127.0.0.1:5000/estoque').json()
+    df = pd.DataFrame(data["Estoque"])
+    if df.empty:
+        st.warning("Não há produtos cadastrados no estoque.")
+    else:
+        df = df[["Produto", "Quantidade", "Data de Validade", "Fornecedor", "Custo por Unidade", "Preço de Venda"]]
+        produtos = []
+        for i in range(len(df)):
+            produtos.append(df["Produto"][i] + " /// " + df['Data de Validade'][i])
+        produto = st.selectbox("Produto + Data de Validade  ", produtos, index=None, placeholder="Escolha uma opção")
+        try:
+            index_produto = produtos.index(produto)
+            produto = df["Produto"][index_produto]
+        except:
+            pass
+    
+        if st.button("Deletar produto"):
+            response = requests.delete(f'http://127.0.0.1:5000/estoque/{produto}')
+            if response.status_code == 200:
+                st.success("Produto deletado com sucesso.")
+                sleep(1)
+                switch_page("Estoque")
+            else:
+                st.error("Erro na deleção. Tente novamente.")
+    
 def listar_produtos():
     st.header("Lista de Estoque")
     if st.button("Mostrar lista de estoque"):
